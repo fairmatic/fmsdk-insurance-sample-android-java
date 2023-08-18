@@ -6,19 +6,19 @@ public class TripManager {
 
     public class State {
         private boolean isUserOnDuty;
-        private int passenegersWaitingForPickup;
-        private int passenegersInCar;
+        private boolean passenegersWaitingForPickup;
+        private boolean passenegersInCar;
         private String trackingId;
 
         public boolean isUserOnDuty() {
             return isUserOnDuty;
         }
 
-        public int getPassengersWaitingForPickup() {
+        public boolean getPassengersWaitingForPickup() {
             return passenegersWaitingForPickup;
         }
 
-        public int getPassengersInCar() {
+        public boolean getPassengersInCar() {
             return passenegersInCar;
         }
 
@@ -26,8 +26,8 @@ public class TripManager {
             return trackingId;
         }
 
-        State(boolean isUserOnDuty, int passenegersWaitingForPickup,
-              int passenegersInCar, String trackingId) {
+        State(boolean isUserOnDuty, boolean passenegersWaitingForPickup,
+              boolean passenegersInCar, String trackingId) {
             this.isUserOnDuty = isUserOnDuty;
             this.passenegersWaitingForPickup = passenegersWaitingForPickup;
             this.passenegersInCar = passenegersInCar;
@@ -61,7 +61,7 @@ public class TripManager {
     }
 
     public synchronized void acceptNewPassengerRequest(Context context) {
-        state.passenegersWaitingForPickup += 1;
+        state.passenegersWaitingForPickup = true;
         SharedPrefsManager.sharedInstance(context)
                 .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
         updateTrackingIdIfNeeded(context);
@@ -69,11 +69,11 @@ public class TripManager {
     }
 
     public synchronized void pickupAPassenger(Context context) {
-        state.passenegersWaitingForPickup -= 1;
+        state.passenegersWaitingForPickup = false;
         SharedPrefsManager.sharedInstance(context)
                 .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
 
-        state.passenegersInCar += 1;
+        state.passenegersInCar = true;
         SharedPrefsManager.sharedInstance(context)
                 .setPassengersInCar(state.passenegersInCar);
         updateTrackingIdIfNeeded(context);
@@ -81,7 +81,7 @@ public class TripManager {
     }
 
     public synchronized void cancelARequest(Context context) {
-        state.passenegersWaitingForPickup -= 1;
+        state.passenegersWaitingForPickup = false;
         SharedPrefsManager.sharedInstance(context)
                 .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
         updateTrackingIdIfNeeded(context);
@@ -89,7 +89,7 @@ public class TripManager {
     }
 
     public synchronized void dropAPassenger(Context context) {
-        state.passenegersInCar -= 1;
+        state.passenegersInCar = false;
         SharedPrefsManager.sharedInstance(context).setPassengersInCar(state.passenegersInCar);
         updateTrackingIdIfNeeded(context);
         FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
@@ -110,7 +110,7 @@ public class TripManager {
     }
 
     private void updateTrackingIdIfNeeded(Context context) {
-        if (state.passenegersWaitingForPickup > 0 || state.passenegersInCar > 0) {
+        if (state.passenegersWaitingForPickup || state.passenegersInCar ) {
             // We need trackingId
             if (state.trackingId == null) {
                 state.trackingId = ((Long)System.currentTimeMillis()).toString();

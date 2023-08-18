@@ -7,7 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.work.ListenableWorker;
 
 import com.fairmatic.fairmaticsamplejava.Constants;
 import com.fairmatic.fairmaticsamplejava.MyFairmaticBroadcastReceiver;
@@ -172,7 +171,7 @@ public class FairmaticManager {
                 }
             }
         };
-        FairmaticManager.InsuranceInfo insuranceInfo = currentlyActiveInsurancePeriod(context);
+        InsuranceInfo insuranceInfo = currentlyActiveInsurancePeriod(context);
         if (insuranceInfo == null) {
             Log.d(Constants.LOG_TAG_DEBUG, "updateFairmaticInsurancePeriod with NO period");
             Fairmatic.INSTANCE.stopPeriod(context, insuranceCalllback);
@@ -198,16 +197,16 @@ public class FairmaticManager {
         }
     }
 
-    private FairmaticManager.InsuranceInfo currentlyActiveInsurancePeriod(Context context) {
+    private InsuranceInfo currentlyActiveInsurancePeriod(Context context) {
         TripManager.State state = TripManager.sharedInstance(context).getTripManagerState();
         if (!state.isUserOnDuty()) {
             return null;
-        } else if (state.getPassengersInCar() > 0) {
-            return new FairmaticManager.InsuranceInfo(3, state.getTrackingId());
-        } else if (state.getPassengersWaitingForPickup() > 0) {
-            return new FairmaticManager.InsuranceInfo(2, state.getTrackingId());
+        } else if (state.getPassengersInCar()) {
+            return new InsuranceInfo(3, state.getTrackingId());
+        } else if (state.getPassengersWaitingForPickup()) {
+            return new InsuranceInfo(2, state.getTrackingId());
         } else {
-            return new FairmaticManager.InsuranceInfo(1, null);
+            return new InsuranceInfo(1, null);
         }
     }
 

@@ -18,15 +18,17 @@ import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
 import com.fairmatic.fairmaticsamplejava.manager.TripManager;
 
-import java.util.Objects;
-
 public class OnDutyFragment extends Fragment implements View.OnClickListener {
 
     private TextView currentStateTextView;
+
+    private TextView currentInsurancePeriodTextView;
     private Button pickupAPassengerButton;
     private Button cancelRequestButton;
     private Button dropAPassengerButton;
     private Button offDutyButton;
+
+    private Button acceptNewRideReqButton;
 
     @Nullable
     @Override
@@ -36,7 +38,12 @@ public class OnDutyFragment extends Fragment implements View.OnClickListener {
 
         currentStateTextView = layout.findViewById(R.id.currentStateTextView);
 
+        currentInsurancePeriodTextView = layout.findViewById(R.id.currentInsurancePeriodTextView);
+
         layout.findViewById(R.id.acceptNewRideReqButton).setOnClickListener(this);
+
+        acceptNewRideReqButton = layout.findViewById(R.id.acceptNewRideReqButton);
+        acceptNewRideReqButton.setOnClickListener(this);
 
         pickupAPassengerButton = layout.findViewById(R.id.pickupAPassengerButton);
         pickupAPassengerButton.setOnClickListener(this);
@@ -56,27 +63,31 @@ public class OnDutyFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("DefaultLocale")
     private void refreshUI() {
         TripManager.State tripManagerState = TripManager.sharedInstance(getContext()).getTripManagerState();
-        int passengersInCar = tripManagerState.getPassengersInCar();
-        int passengerWaitingForPickup = tripManagerState.getPassengersWaitingForPickup();
+        boolean passengersInCar = tripManagerState.getPassengersInCar();
+        boolean passengerWaitingForPickup = tripManagerState.getPassengersWaitingForPickup();
 
         int insurancePeriod = 0;
-        if (passengersInCar > 0) {
+        if (passengersInCar) {
             insurancePeriod = 3;
-        } else if (passengerWaitingForPickup > 0) {
+        } else if (passengerWaitingForPickup) {
             insurancePeriod = 2;
         } else if (tripManagerState.isUserOnDuty()) {
             insurancePeriod = 1;
         }
 
         currentStateTextView.setText(
-                String.format("Insurance Period: %d\nPassengers In Car: %d" +
-                                "\nPassengers Waiting For Pickup: %d", insurancePeriod, passengersInCar,
+                String.format("" +
+                                "Passengers In Car: %s" +
+                                "\nPassengers Waiting For Pickup: %s", passengersInCar,
                         passengerWaitingForPickup));
 
-        pickupAPassengerButton.setEnabled(passengerWaitingForPickup > 0);
-        cancelRequestButton.setEnabled(passengerWaitingForPickup > 0);
-        dropAPassengerButton.setEnabled(passengersInCar > 0);
-        offDutyButton.setEnabled(passengersInCar == 0 && passengerWaitingForPickup == 0);
+        currentInsurancePeriodTextView.setText(String.format("Current Insurance Period: %d", insurancePeriod));
+
+        acceptNewRideReqButton.setEnabled(!passengersInCar && !passengerWaitingForPickup);
+        pickupAPassengerButton.setEnabled(passengerWaitingForPickup);
+        cancelRequestButton.setEnabled(passengerWaitingForPickup);
+        dropAPassengerButton.setEnabled(passengersInCar);
+        offDutyButton.setEnabled(!passengersInCar && !passengerWaitingForPickup );
     }
 
     @Override
