@@ -36,7 +36,7 @@ public class FairmaticManager {
     }
 
     // TODO - remove this before submit.
-    private static final String FAIRMATIC_SDK_KEY = "";   // Your Fairmatic SDK Key
+    private static final String FAIRMATIC_SDK_KEY = "UXBDuLRFg6k2YT3oys2T9njD8BEzAoA1";   // Your Fairmatic SDK Key
 
     private static FairmaticManager sharedInstance = new FairmaticManager();
 
@@ -190,42 +190,72 @@ public class FairmaticManager {
         }
     }
 
+    public void handleInsurancePeriod3(Context context, FairmaticOperationCallback callback ){
+        if (context != null) {
+            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod3 called");
+            String trackingId = ((Long)System.currentTimeMillis()).toString();
+            Fairmatic.INSTANCE.startDriveWithPeriod3(context, trackingId, result -> {
+                if(callback != null)
+                    callback.onCompletion(result);
+            });
+        }
+    }
 
-
+    public void handleStopPeriod(Context context, FairmaticOperationCallback callback ){
+        if (context != null) {
+            Log.d(Constants.LOG_TAG_DEBUG, "handleStopPeriod called");
+            Fairmatic.INSTANCE.stopPeriod(context, result -> {
+                if(callback != null)
+                    callback.onCompletion(result);
+            });
+        }
+    }
 
     void updateFairmaticInsurancePeriod(Context context) {
-        FairmaticOperationCallback insuranceCalllback = new FairmaticOperationCallback() {
-            @Override
-            public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
-                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
-                            ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                }
-            }
-        };
+
         InsuranceInfo insuranceInfo = currentlyActiveInsurancePeriod(context);
         if (insuranceInfo == null) {
             Log.d(Constants.LOG_TAG_DEBUG, "updateFairmaticInsurancePeriod with NO period");
-            Fairmatic.INSTANCE.stopPeriod(context, insuranceCalllback);
+            Fairmatic.INSTANCE.stopPeriod(context, new FairmaticOperationCallback() {
+                @Override
+                public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "stopPeriod called");
+                }
+            });
         } else if (insuranceInfo.insurancePeriod == 3) {
             Log.d(Constants.LOG_TAG_DEBUG,
                     String.format("updateFairmaticInsurancePeriod with period %d and id: %s",
                             insuranceInfo.insurancePeriod,
                             insuranceInfo.trackingId));
             Fairmatic.INSTANCE.startDriveWithPeriod3(context, insuranceInfo.trackingId,
-                    insuranceCalllback);
+                    new FairmaticOperationCallback() {
+                        @Override
+                        public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "startDriveWithPeriod3 called");
+                        }
+                    });
         } else if (insuranceInfo.insurancePeriod == 2) {
             Log.d(Constants.LOG_TAG_DEBUG,
                     String.format("updateFairmaticInsurancePeriod with period %d and id: %s",
                             insuranceInfo.insurancePeriod,
                             insuranceInfo.trackingId));
             Fairmatic.INSTANCE.startDriveWithPeriod2(context, insuranceInfo.trackingId,
-                    insuranceCalllback);
+                    new FairmaticOperationCallback() {
+                        @Override
+                        public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "startDriveWithPeriod2 called");
+                        }
+                    });
         } else {
             Log.d(Constants.LOG_TAG_DEBUG,
                     String.format("updateFairmaticInsurancePeriod with period %d",
                             insuranceInfo.insurancePeriod));
-            Fairmatic.INSTANCE.startDriveWithPeriod1(context, insuranceCalllback);
+            Fairmatic.INSTANCE.startDriveWithPeriod1(context, new FairmaticOperationCallback() {
+                @Override
+                public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "startDriveWithPeriod1 called");
+                }
+            });
         }
     }
 

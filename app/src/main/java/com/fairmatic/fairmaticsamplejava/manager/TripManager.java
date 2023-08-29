@@ -1,6 +1,12 @@
 package com.fairmatic.fairmaticsamplejava.manager;
 
 import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.fairmatic.sdk.classes.FairmaticOperationCallback;
+import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
 public class TripManager {
 
@@ -60,39 +66,66 @@ public class TripManager {
                 sharedPrefsManager.getTrackingId());
     }
 
-    public synchronized void acceptNewPassengerRequest(Context context) {
-        state.passenegersWaitingForPickup = true;
-        SharedPrefsManager.sharedInstance(context)
-                .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
+    public synchronized void acceptNewPassengerRequest(Context context, FairmaticOperationCallback callback) {
+        FairmaticManager.sharedInstance().handleInsurancePeriod2(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to accept new passenger",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.passenegersWaitingForPickup = true;
+                SharedPrefsManager.sharedInstance(context)
+                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+            }
+            callback.onCompletion(fairmaticOperationResult);
+        });
     }
 
-    public synchronized void pickupAPassenger(Context context) {
-        state.passenegersWaitingForPickup = false;
-        SharedPrefsManager.sharedInstance(context)
-                .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+    public synchronized void pickupAPassenger(Context context, FairmaticOperationCallback callback) {
+        FairmaticManager.sharedInstance().handleInsurancePeriod3(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to pickup a passenger",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.passenegersWaitingForPickup = false;
+                state.passenegersInCar = true;
+                SharedPrefsManager.sharedInstance(context)
+                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
 
-        state.passenegersInCar = true;
-        SharedPrefsManager.sharedInstance(context)
-                .setPassengersInCar(state.passenegersInCar);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
+                SharedPrefsManager.sharedInstance(context)
+                        .setPassengersInCar(state.passenegersInCar);
+            }
+            callback.onCompletion(fairmaticOperationResult);
+        });
     }
 
-    public synchronized void cancelARequest(Context context) {
-        state.passenegersWaitingForPickup = false;
-        SharedPrefsManager.sharedInstance(context)
-                .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
+    public synchronized void cancelARequest(Context context, FairmaticOperationCallback callback) {
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to cancel a request",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.passenegersWaitingForPickup = false;
+                SharedPrefsManager.sharedInstance(context)
+                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+            }
+            callback.onCompletion(fairmaticOperationResult);
+        } );
     }
 
-    public synchronized void dropAPassenger(Context context) {
-        state.passenegersInCar = false;
-        SharedPrefsManager.sharedInstance(context).setPassengersInCar(state.passenegersInCar);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
+    public synchronized void dropAPassenger(Context context, FairmaticOperationCallback callback) {
+
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to drop a passenger",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.passenegersInCar = false;
+                SharedPrefsManager.sharedInstance(context)
+                        .setPassengersInCar(state.passenegersInCar);
+            }
+            callback.onCompletion(fairmaticOperationResult);
+        });
+
     }
 
     public synchronized void goOnDuty(Context context) {
