@@ -62,23 +62,29 @@ public class FairmaticManager {
                 fairmaticConfiguration,
                 MyFairmaticBroadcastReceiver.class,
                 MyFairmaticNotificationProvider.class,
-                result -> {
-                    Log.d(Constants.LOG_TAG_DEBUG, "FairmaticSDK setup result: " + result);
-                    if (result instanceof FairmaticOperationResult.Success) {
-                        Log.d(Constants.LOG_TAG_DEBUG, "FairmaticSDK setup success");
-                        // Update periods
-                        updateFairmaticInsurancePeriod(context);
-                        // Hide error if visible
-                        NotificationUtility.hideFairmaticSetupFailureNotification(context);
-                        SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(false);
-                    } else if(result instanceof FairmaticOperationResult.Failure){
-
-                        Log.d(Constants.LOG_TAG_DEBUG,
-                                String.format("FairmaticSDK setup failed %s",
-                                       ((FairmaticOperationResult.Failure) result).getError()));
-                        // Display error
-                        NotificationUtility.displayFairmaticSetupFailureNotification(context);
-                        SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(true);
+                new FairmaticOperationCallback() {
+                    @Override
+                    public void onCompletion(FairmaticOperationResult result) {
+                        if (result instanceof FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "FairmaticSDK setup success");
+                            // Update periods
+                            updateFairmaticInsurancePeriod(context);
+                            // Hide error if visible
+                            NotificationUtility.hideFairmaticSetupFailureNotification(context);
+                            SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(false);
+                        } else if (result instanceof FairmaticOperationResult.Failure) {
+                            Log.d(
+                                    Constants.LOG_TAG_DEBUG,
+                                    String.format(
+                                            "FairmaticSDK setup failed %s",
+                                            ((FairmaticOperationResult.Failure) result).getError().name()
+                                    )
+                            );
+                            // Display error
+                            NotificationUtility.displayFairmaticSetupFailureNotification(context);
+                            SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(true);
+                        }
+                        callback.onCompletion(result);
                     }
                 }
         );
@@ -162,6 +168,30 @@ public class FairmaticManager {
             }
         });
     }
+
+    public void handleInsurancePeriod1(Context context, FairmaticOperationCallback callback ){
+        if (context != null) {
+            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod1 called");
+            Fairmatic.INSTANCE.startDriveWithPeriod1(context, result -> {
+                if(callback != null)
+                    callback.onCompletion(result);
+            });
+        }
+    }
+
+    public void handleInsurancePeriod2(Context context, FairmaticOperationCallback callback ){
+        if (context != null) {
+            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod2 called");
+            String trackingId = ((Long)System.currentTimeMillis()).toString();
+            Fairmatic.INSTANCE.startDriveWithPeriod2(context, trackingId, result -> {
+                if(callback != null)
+                    callback.onCompletion(result);
+            });
+        }
+    }
+
+
+
 
     void updateFairmaticInsurancePeriod(Context context) {
         FairmaticOperationCallback insuranceCalllback = new FairmaticOperationCallback() {
