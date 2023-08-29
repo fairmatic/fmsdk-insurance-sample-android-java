@@ -129,31 +129,29 @@ public class TripManager {
     }
 
     public synchronized void goOnDuty(Context context) {
-        state.isUserOnDuty = true;
-        SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
+
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to go on duty",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.isUserOnDuty = true;
+                SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
+            }
+        });
     }
 
     public synchronized void goOffDuty(Context context) {
-        state.isUserOnDuty = false;
-        SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
-        updateTrackingIdIfNeeded(context);
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context);
-    }
 
-    private void updateTrackingIdIfNeeded(Context context) {
-        if (state.passenegersWaitingForPickup || state.passenegersInCar ) {
-            // We need trackingId
-            if (state.trackingId == null) {
-                state.trackingId = ((Long)System.currentTimeMillis()).toString();
-                SharedPrefsManager.sharedInstance(context).setTrackingId(state.trackingId);
+        FairmaticManager.sharedInstance().handleStopPeriod(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Toast.makeText(context, "Failed to go off duty",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                state.isUserOnDuty = false;
+                SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
             }
-        }
-        else {
-            state.trackingId = null;
-            SharedPrefsManager.sharedInstance(context).setTrackingId(state.trackingId);
-        }
+        });
     }
 
     public synchronized State getTripManagerState() {
