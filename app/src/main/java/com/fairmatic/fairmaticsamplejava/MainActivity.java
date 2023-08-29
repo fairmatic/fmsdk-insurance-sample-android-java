@@ -27,13 +27,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String driverId = SharedPrefsManager.sharedInstance(this).getDriverId();
-        // if the user is already logged in or setup previously failed, Zendrive should be set up.
-        if (driverId != null ||
-                SharedPrefsManager.sharedInstance(this).shouldRetryFairmaticSetup()) {
-            FairmaticManager.sharedInstance().initializeFairmaticSDK(this, driverId);
-        }
+
         // check Zendrive settings on app resume if there are errors/warnings present
+        FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
+        loadFirstFragment();
         FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
     }
 

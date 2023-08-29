@@ -50,11 +50,12 @@ public class FairmaticManager {
             "1234567890"
     );
 
-    public void initializeFairmaticSDK(final Context context, String driverId) {
+    public void initializeFairmaticSDK(final Context context, String driverId, FairmaticOperationCallback callback) {
 
         Log.d(Constants.LOG_TAG_DEBUG, "initializeFairmaticSDK called");
         final FairmaticConfiguration fairmaticConfiguration = new FairmaticConfiguration(
                 FAIRMATIC_SDK_KEY, driverId, fairmaticDriverAttributes);
+        Log.d(Constants.LOG_TAG_DEBUG, "initializeFairmaticSDK called with driverId: " + driverId);
 
         Fairmatic.INSTANCE.setup(
                 context,
@@ -62,6 +63,7 @@ public class FairmaticManager {
                 MyFairmaticBroadcastReceiver.class,
                 MyFairmaticNotificationProvider.class,
                 result -> {
+                    Log.d(Constants.LOG_TAG_DEBUG, "FairmaticSDK setup result: " + result);
                     if (result instanceof FairmaticOperationResult.Success) {
                         Log.d(Constants.LOG_TAG_DEBUG, "FairmaticSDK setup success");
                         // Update periods

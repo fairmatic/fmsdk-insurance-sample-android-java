@@ -40,7 +40,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             // Save driver information
             SharedPrefsManager.sharedInstance(getContext()).setDriverId(driverId);
             // Initialize ZendriveSDK
-            FairmaticManager.sharedInstance().initializeFairmaticSDK(getContext(), driverId);
+            FairmaticManager.sharedInstance().initializeFairmaticSDK(getContext(), driverId, new FairmaticOperationCallback() {
+                @Override
+                public void onCompletion(FairmaticOperationResult result) {
+                    if (result instanceof FairmaticOperationResult.Failure) {
+                        String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
+                        Toast.makeText(SampleAppApplication.this, "Failed to initialize Fairmatic SDK : " + errorMessage, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SampleAppApplication.this, "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             // Load UI
             ((MainActivity) requireActivity()).replaceFragment(new OffDutyFragment());
         }
