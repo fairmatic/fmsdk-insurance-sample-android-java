@@ -50,8 +50,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     if (result instanceof FairmaticOperationResult.Failure) {
                         String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
                         Toast.makeText(getContext(), "Failed to initialize Fairmatic SDK : " + errorMessage, Toast.LENGTH_SHORT).show();
-                        ((MainActivity) requireActivity()).replaceFragment(new OffDutyFragment());
+
                     } else {
+                        ((MainActivity) requireActivity()).replaceFragment(new OffDutyFragment());
                         Toast.makeText(getContext(), "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show();
                     }
                 }

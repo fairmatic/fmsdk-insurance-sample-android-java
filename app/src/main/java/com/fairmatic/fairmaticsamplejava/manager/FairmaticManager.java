@@ -70,6 +70,7 @@ public class FairmaticManager {
                             // Update periods
                             updateFairmaticInsurancePeriod(context);
                             // Hide error if visible
+                            Log.d("check123", "Reached here");
                             NotificationUtility.hideFairmaticSetupFailureNotification(context);
                             SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(false);
                         } else if (result instanceof FairmaticOperationResult.Failure) {
@@ -211,8 +212,8 @@ public class FairmaticManager {
         }
     }
 
-    void updateFairmaticInsurancePeriod(Context context) {
-
+    public void updateFairmaticInsurancePeriod(Context context) {
+        Log.d("check123", "updateFairmaticInsurancePeriod called");
         InsuranceInfo insuranceInfo = currentlyActiveInsurancePeriod(context);
         if (insuranceInfo == null) {
             Log.d(Constants.LOG_TAG_DEBUG, "updateFairmaticInsurancePeriod with NO period");

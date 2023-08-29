@@ -74,7 +74,7 @@ public class NotificationUtility {
      * Creates a notification to be displayed when Power saver mode is enabled
      * on the device.
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1) // This error shouldn't be sent below this.
+    @TargetApi(Build.VERSION_CODES.O) // This error shouldn't be sent below this.
     public static Notification getPSMNotification(Context context, boolean isError) {
         createNotificationChannels(context);
         Intent actionIntent = new Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS);
@@ -223,7 +223,6 @@ public class NotificationUtility {
                 .setTicker("Failed To Enable Insurance Benefits")
                 .setContentText("Tap This Notification To Retry")
                 .setSmallIcon(R.drawable.notification_icon)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
