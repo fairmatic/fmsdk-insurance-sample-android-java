@@ -52,7 +52,7 @@ public class NotificationUtility {
     public static Notification getInDriveNotification(@NonNull Context context) {
         createNotificationChannels(context);
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setContentText("Drive Active.").build();
@@ -64,7 +64,7 @@ public class NotificationUtility {
     public static Notification getMaybeInDriveNotification(@NonNull Context context) {
         createNotificationChannels(context);
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setContentText("Detecting Possible Drive.").build();
@@ -91,7 +91,7 @@ public class NotificationUtility {
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setContentIntent(pi)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .build();
     }
 
@@ -115,7 +115,7 @@ public class NotificationUtility {
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .build();
     }
 
@@ -134,7 +134,7 @@ public class NotificationUtility {
                 .setContentTitle("Location Permission Denied")
                 .setTicker("Location Permission Denied")
                 .setContentText("Grant location permission to Fairmatic Test")
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
@@ -160,7 +160,7 @@ public class NotificationUtility {
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setContentText("Enable settings for location.")
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .build();
     }
 
@@ -182,7 +182,6 @@ public class NotificationUtility {
                 .setContentTitle("Google Play Settings Error")
                 .setTicker("Google Play Settings Error")
                 .setContentText("Tap here to resolve.")
-                .setSmallIcon(R.drawable.notification_icon)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
@@ -207,7 +206,7 @@ public class NotificationUtility {
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .build();
     }
 
@@ -217,12 +216,12 @@ public class NotificationUtility {
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.NOTIFICATION_ID, FAIRMATIC_FAILED_NOTIFICATION_ID);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_icon);
+        //Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_icon);
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context.getApplicationContext(), ISSUES_CHANNEL_KEY)
                 .setContentTitle("Failed To Enable Insurance Benefits")
                 .setTicker("Failed To Enable Insurance Benefits")
                 .setContentText("Tap This Notification To Retry")
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.notif_icon)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

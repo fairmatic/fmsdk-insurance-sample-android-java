@@ -13,6 +13,8 @@ import com.fairmatic.fairmaticsamplejava.Constants;
 import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
 import com.fairmatic.fairmaticsamplejava.manager.TripManager;
+import com.fairmatic.sdk.classes.FairmaticOperationCallback;
+import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
 import java.util.Objects;
 
@@ -35,7 +37,17 @@ public class OffDutyFragment extends Fragment implements View.OnClickListener {
 
     private void goOnDutyButtonClicked() {
         Log.d(Constants.LOG_TAG_DEBUG, "goOnDutyButtonClicked");
-        TripManager.sharedInstance(getContext()).goOnDuty(getContext());
-        ((MainActivity) requireActivity()).replaceFragment(new OnDutyFragment());
+        TripManager.sharedInstance(getContext()).goOnDuty(getContext(), new FairmaticOperationCallback() {
+            @Override
+            public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                    String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) fairmaticOperationResult).getError());
+                    Log.d(Constants.LOG_TAG_DEBUG, "Failed to go on duty : " + errorMessage);
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Successfully went on duty");
+                    ((MainActivity) requireActivity()).replaceFragment(new OnDutyFragment());
+                }
+            }
+        });
     }
 }

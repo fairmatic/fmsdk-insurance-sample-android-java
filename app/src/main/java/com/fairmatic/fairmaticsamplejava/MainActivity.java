@@ -11,7 +11,6 @@ import com.fairmatic.fairmaticsamplejava.fragments.OnDutyFragment;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
 import com.fairmatic.fairmaticsamplejava.manager.TripManager;
-//import com.fairmatic.fairmaticsamplejava.manager.ZendriveManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // check Zendrive settings on app resume if there are errors/warnings present
+        // check Fairmatic settings on app resume if there are errors/warnings present
         FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
         loadFirstFragment();
         FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);

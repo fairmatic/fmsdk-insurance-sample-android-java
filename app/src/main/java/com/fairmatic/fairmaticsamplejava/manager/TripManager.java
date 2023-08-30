@@ -129,7 +129,7 @@ public class TripManager {
 
     }
 
-    public synchronized void goOnDuty(Context context) {
+    public synchronized void goOnDuty(Context context, FairmaticOperationCallback callback) {
 
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
             if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
@@ -140,6 +140,7 @@ public class TripManager {
                 Log.d("Check123", "goOnDuty: " + state.isUserOnDuty);
                 SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
             }
+            callback.onCompletion(fairmaticOperationResult);
         });
     }
 

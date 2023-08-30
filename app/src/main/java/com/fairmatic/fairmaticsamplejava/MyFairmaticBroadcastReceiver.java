@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
-//import com.fairmatic.fairmaticsamplejava.manager.ZendriveManager;
 import com.fairmatic.sdk.classes.AccidentInfo;
 import com.fairmatic.sdk.classes.AnalyzedDriveInfo;
 import com.fairmatic.sdk.classes.DriveResumeInfo;
@@ -46,10 +45,10 @@ public class MyFairmaticBroadcastReceiver extends FairmaticBroadcastReceiver {
 
     @Override
     public void onFairmaticSettingsConfigChanged(@NonNull Context context, boolean errorsFound, boolean warningsFound) {
-        Log.d(Constants.LOG_TAG_DEBUG, "onZendriveSettingsConfigChanged");
+        Log.d(Constants.LOG_TAG_DEBUG, "onFairmaticSettingsConfigChanged");
 
-        // Persist whether the Zendrive SDK has detected errors or warnings.
-        // Use these persisted flags as a basis to determine whether Zendrive settings
+        // Persist whether the Fairmatic SDK has detected errors or warnings.
+        // Use these persisted flags as a basis to determine whether Fairmatic settings
         // should be fetched on app resume.
         SharedPrefsManager prefsManager = SharedPrefsManager.sharedInstance(context);
         prefsManager.setSettingsErrorsFound(errorsFound);
