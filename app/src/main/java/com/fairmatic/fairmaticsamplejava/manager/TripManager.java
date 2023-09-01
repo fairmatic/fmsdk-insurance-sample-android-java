@@ -1,11 +1,7 @@
 package com.fairmatic.fairmaticsamplejava.manager;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
 import com.fairmatic.sdk.classes.FairmaticOperationCallback;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
@@ -137,7 +133,6 @@ public class TripManager {
                         Toast.LENGTH_SHORT).show();
             } else {
                 state.isUserOnDuty = true;
-                Log.d("Check123", "goOnDuty: " + state.isUserOnDuty);
                 SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(state.isUserOnDuty);
             }
             callback.onCompletion(fairmaticOperationResult);
