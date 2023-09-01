@@ -58,8 +58,8 @@ public class TripManager {
     private TripManager(Context context) {
         SharedPrefsManager sharedPrefsManager = SharedPrefsManager.sharedInstance(context);
         state = new State(sharedPrefsManager.isUserOnDuty(),
-                sharedPrefsManager.passengersWaitingForPickup(),
-                sharedPrefsManager.passengersInCar(),
+                sharedPrefsManager.passengerWaitingForPickup(),
+                sharedPrefsManager.passengerInCar(),
                 sharedPrefsManager.getTrackingId());
     }
 
@@ -71,7 +71,7 @@ public class TripManager {
             } else {
                 state.passenegerWaitingForPickup = true;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
+                        .setPassengerWaitingForPickup(state.passenegerWaitingForPickup);
             }
             callback.onCompletion(fairmaticOperationResult);
         });
@@ -86,10 +86,10 @@ public class TripManager {
                 state.passenegerWaitingForPickup = false;
                 state.passenegerInCar = true;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
+                        .setPassengerWaitingForPickup(state.passenegerWaitingForPickup);
 
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersInCar(state.passenegerInCar);
+                        .setPassengerInCar(state.passenegerInCar);
             }
             callback.onCompletion(fairmaticOperationResult);
         });
@@ -103,7 +103,7 @@ public class TripManager {
             } else {
                 state.passenegerWaitingForPickup = false;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
+                        .setPassengerWaitingForPickup(state.passenegerWaitingForPickup);
             }
             callback.onCompletion(fairmaticOperationResult);
         } );
@@ -118,7 +118,7 @@ public class TripManager {
             } else {
                 state.passenegerInCar = false;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersInCar(state.passenegerInCar);
+                        .setPassengerInCar(state.passenegerInCar);
             }
             callback.onCompletion(fairmaticOperationResult);
         });

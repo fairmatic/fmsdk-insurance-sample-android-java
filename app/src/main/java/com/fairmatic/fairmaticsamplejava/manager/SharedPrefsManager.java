@@ -3,7 +3,6 @@ package com.fairmatic.fairmaticsamplejava.manager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 @SuppressLint("ApplySharedPref")
 public class SharedPrefsManager {
@@ -12,8 +11,8 @@ public class SharedPrefsManager {
 
     private static final String DRIVER_ID = "driverId";
     private static final String USER_ON_DUTY = "isUserOnDuty";
-    private static final String PASSENGERS_IN_CAR = "passengersInCar";
-    private static final String PASSENGERS_WAITING_FOR_PICKUP = "passengersWaitingForPickup";
+    private static final String PASSENGER_IN_CAR = "passengerInCar";
+    private static final String PASSENGER_WAITING_FOR_PICKUP = "passengerWaitingForPickup";
     private static final String TRACKING_ID = "trackingId";
     private static final String FAIRMATIC_SETTINGS_ERRORS = "errorsFound";
     private static final String FAIRMATIC_SETTINGS_WARNINGS = "warningsFound";
@@ -46,20 +45,20 @@ public class SharedPrefsManager {
         prefs.edit().putBoolean(USER_ON_DUTY, isUserOnDuty).apply();
     }
 
-    Boolean passengersInCar() {
-        return prefs.getBoolean(PASSENGERS_IN_CAR, false);
+    Boolean passengerInCar() {
+        return prefs.getBoolean(PASSENGER_IN_CAR, false);
     }
 
-    void setPassengersInCar(boolean passengersInCar) {
-        prefs.edit().putBoolean(PASSENGERS_IN_CAR, passengersInCar).apply();
+    void setPassengerInCar(boolean passengerInCar) {
+        prefs.edit().putBoolean(PASSENGER_IN_CAR, passengerInCar).apply();
     }
 
-    Boolean passengersWaitingForPickup() {
-        return prefs.getBoolean(PASSENGERS_WAITING_FOR_PICKUP, false);
+    Boolean passengerWaitingForPickup() {
+        return prefs.getBoolean(PASSENGER_WAITING_FOR_PICKUP, false);
     }
 
-    void setPassengersWaitingForPickup(boolean passengersWaitingForPickup) {
-        prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, passengersWaitingForPickup).apply();
+    void setPassengerWaitingForPickup(boolean passengerWaitingForPickup) {
+        prefs.edit().putBoolean(PASSENGER_WAITING_FOR_PICKUP, passengerWaitingForPickup).apply();
     }
 
     String getTrackingId() {
