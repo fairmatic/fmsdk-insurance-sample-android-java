@@ -70,7 +70,6 @@ public class FairmaticManager {
                             // Update periods
                             updateFairmaticInsurancePeriod(context);
                             // Hide error if visible
-                            Log.d("check123", "Reached here");
                             NotificationUtility.hideFairmaticSetupFailureNotification(context);
                             SharedPrefsManager.sharedInstance(context).setRetryFairmaticSetup(false);
                         } else if (result instanceof FairmaticOperationResult.Failure) {

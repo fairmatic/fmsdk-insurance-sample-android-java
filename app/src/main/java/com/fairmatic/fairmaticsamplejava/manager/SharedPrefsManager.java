@@ -27,7 +27,7 @@ public class SharedPrefsManager {
     }
 
     private SharedPrefsManager(Context context) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs = context.getSharedPreferences("com.fairmatic.fairmaticsamplejava", Context.MODE_PRIVATE);
     }
 
     public String getDriverId() {

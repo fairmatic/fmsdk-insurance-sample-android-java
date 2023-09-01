@@ -12,11 +12,12 @@ import androidx.fragment.app.Fragment;
 
 import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
-import com.fairmatic.fairmaticsamplejava.SampleAppApplication;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
 import com.fairmatic.sdk.classes.FairmaticOperationCallback;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
+
+import java.util.Objects;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -50,7 +51,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     if (result instanceof FairmaticOperationResult.Failure) {
                         String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
                         Toast.makeText(getContext(), "Failed to initialize Fairmatic SDK : " + errorMessage, Toast.LENGTH_SHORT).show();
-
                     } else {
                         ((MainActivity) requireActivity()).replaceFragment(new OffDutyFragment());
                         Toast.makeText(getContext(), "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show();
