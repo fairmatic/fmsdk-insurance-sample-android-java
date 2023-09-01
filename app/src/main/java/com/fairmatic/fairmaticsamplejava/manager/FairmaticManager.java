@@ -263,9 +263,9 @@ public class FairmaticManager {
         TripManager.State state = TripManager.sharedInstance(context).getTripManagerState();
         if (!state.isUserOnDuty()) {
             return null;
-        } else if (state.getPassengersInCar()) {
+        } else if (state.getPassengerInCar()) {
             return new InsuranceInfo(3, state.getTrackingId());
-        } else if (state.getPassengersWaitingForPickup()) {
+        } else if (state.getPassengerWaitingForPickup()) {
             return new InsuranceInfo(2, state.getTrackingId());
         } else {
             return new InsuranceInfo(1, null);

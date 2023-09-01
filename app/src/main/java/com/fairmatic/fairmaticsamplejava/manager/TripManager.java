@@ -9,20 +9,20 @@ public class TripManager {
 
     public class State {
         private boolean isUserOnDuty;
-        private boolean passenegersWaitingForPickup;
-        private boolean passenegersInCar;
+        private boolean passenegerWaitingForPickup;
+        private boolean passenegerInCar;
         private String trackingId;
 
         public boolean isUserOnDuty() {
             return isUserOnDuty;
         }
 
-        public boolean getPassengersWaitingForPickup() {
-            return passenegersWaitingForPickup;
+        public boolean getPassengerWaitingForPickup() {
+            return passenegerWaitingForPickup;
         }
 
-        public boolean getPassengersInCar() {
-            return passenegersInCar;
+        public boolean getPassengerInCar() {
+            return passenegerInCar;
         }
 
         String getTrackingId() {
@@ -32,15 +32,15 @@ public class TripManager {
         State(boolean isUserOnDuty, boolean passenegersWaitingForPickup,
               boolean passenegersInCar, String trackingId) {
             this.isUserOnDuty = isUserOnDuty;
-            this.passenegersWaitingForPickup = passenegersWaitingForPickup;
-            this.passenegersInCar = passenegersInCar;
+            this.passenegerWaitingForPickup = passenegersWaitingForPickup;
+            this.passenegerInCar = passenegersInCar;
             this.trackingId = trackingId;
         }
 
         State(State another) {
             this.isUserOnDuty = another.isUserOnDuty;
-            this.passenegersWaitingForPickup = another.passenegersWaitingForPickup;
-            this.passenegersInCar = another.passenegersInCar;
+            this.passenegerWaitingForPickup = another.passenegerWaitingForPickup;
+            this.passenegerInCar = another.passenegerInCar;
             this.trackingId = another.trackingId;
         }
     }
@@ -69,9 +69,9 @@ public class TripManager {
                 Toast.makeText(context, "Failed to accept new passenger",
                         Toast.LENGTH_SHORT).show();
             } else {
-                state.passenegersWaitingForPickup = true;
+                state.passenegerWaitingForPickup = true;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
             }
             callback.onCompletion(fairmaticOperationResult);
         });
@@ -83,13 +83,13 @@ public class TripManager {
                 Toast.makeText(context, "Failed to pickup a passenger",
                         Toast.LENGTH_SHORT).show();
             } else {
-                state.passenegersWaitingForPickup = false;
-                state.passenegersInCar = true;
+                state.passenegerWaitingForPickup = false;
+                state.passenegerInCar = true;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
 
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersInCar(state.passenegersInCar);
+                        .setPassengersInCar(state.passenegerInCar);
             }
             callback.onCompletion(fairmaticOperationResult);
         });
@@ -101,9 +101,9 @@ public class TripManager {
                 Toast.makeText(context, "Failed to cancel a request",
                         Toast.LENGTH_SHORT).show();
             } else {
-                state.passenegersWaitingForPickup = false;
+                state.passenegerWaitingForPickup = false;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersWaitingForPickup(state.passenegersWaitingForPickup);
+                        .setPassengersWaitingForPickup(state.passenegerWaitingForPickup);
             }
             callback.onCompletion(fairmaticOperationResult);
         } );
@@ -116,9 +116,9 @@ public class TripManager {
                 Toast.makeText(context, "Failed to drop a passenger",
                         Toast.LENGTH_SHORT).show();
             } else {
-                state.passenegersInCar = false;
+                state.passenegerInCar = false;
                 SharedPrefsManager.sharedInstance(context)
-                        .setPassengersInCar(state.passenegersInCar);
+                        .setPassengersInCar(state.passenegerInCar);
             }
             callback.onCompletion(fairmaticOperationResult);
         });

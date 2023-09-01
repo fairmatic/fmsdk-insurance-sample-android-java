@@ -1,6 +1,5 @@
 package com.fairmatic.fairmaticsamplejava.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,9 +193,9 @@ public class OnDutyFragment extends Fragment {
             TripManager.State state = tripManager.getTripManagerState();
             Log.d("check123", "state: " + state.isUserOnDuty());
             if (state != null && state.isUserOnDuty()) {
-                if (state.getPassengersWaitingForPickup()) {
+                if (state.getPassengerWaitingForPickup()) {
                     refreshUIForPeriod2();
-                } else if (state.getPassengersInCar()) {
+                } else if (state.getPassengerInCar()) {
                     refreshUIForPeriod3();
                 } else {
                     refreshUIForPeriod1();
