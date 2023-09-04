@@ -212,7 +212,6 @@ public class FairmaticManager {
     }
 
     public void updateFairmaticInsurancePeriod(Context context) {
-        Log.d("check123", "updateFairmaticInsurancePeriod called");
         InsuranceInfo insuranceInfo = currentlyActiveInsurancePeriod(context);
         if (insuranceInfo == null) {
             Log.d(Constants.LOG_TAG_DEBUG, "updateFairmaticInsurancePeriod with NO period");

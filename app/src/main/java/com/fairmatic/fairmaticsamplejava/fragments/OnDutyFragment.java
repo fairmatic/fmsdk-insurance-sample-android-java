@@ -191,7 +191,6 @@ public class OnDutyFragment extends Fragment {
 
         if (tripManager != null && fairmaticManager != null) {
             TripManager.State state = tripManager.getTripManagerState();
-            Log.d("check123", "state: " + state.isUserOnDuty());
             if (state != null && state.isUserOnDuty()) {
                 if (state.getPassengerWaitingForPickup()) {
                     refreshUIForPeriod2();
