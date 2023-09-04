@@ -171,8 +171,8 @@ public class FairmaticManager {
 
     public void handleInsurancePeriod1(Context context, FairmaticOperationCallback callback ){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod1 called");
             Fairmatic.INSTANCE.startDriveWithPeriod1(context, result -> {
+                Log.d(Constants.LOG_TAG_DEBUG, "Calling Start Period 1");
                 if(callback != null)
                     callback.onCompletion(result);
             });
@@ -181,9 +181,9 @@ public class FairmaticManager {
 
     public void handleInsurancePeriod2(Context context, FairmaticOperationCallback callback ){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod2 called");
-            String trackingId = ((Long)System.currentTimeMillis()).toString();
+            String trackingId = "P2-"+((Long)System.currentTimeMillis()).toString();
             Fairmatic.INSTANCE.startDriveWithPeriod2(context, trackingId, result -> {
+                Log.d(Constants.LOG_TAG_DEBUG, "Calling Start Period 2 with trackingId: " + trackingId);
                 if(callback != null)
                     callback.onCompletion(result);
             });
@@ -192,9 +192,9 @@ public class FairmaticManager {
 
     public void handleInsurancePeriod3(Context context, FairmaticOperationCallback callback ){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod3 called");
-            String trackingId = ((Long)System.currentTimeMillis()).toString();
+            String trackingId = "P3-"+((Long)System.currentTimeMillis());
             Fairmatic.INSTANCE.startDriveWithPeriod3(context, trackingId, result -> {
+                Log.d(Constants.LOG_TAG_DEBUG, "Calling Start Period 3 with trackingId: " + trackingId);
                 if(callback != null)
                     callback.onCompletion(result);
             });
@@ -203,8 +203,8 @@ public class FairmaticManager {
 
     public void handleStopPeriod(Context context, FairmaticOperationCallback callback ){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleStopPeriod called");
             Fairmatic.INSTANCE.stopPeriod(context, result -> {
+                Log.d(Constants.LOG_TAG_DEBUG, "Calling Stop period");
                 if(callback != null)
                     callback.onCompletion(result);
             });
