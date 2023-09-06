@@ -18,8 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         loadFirstFragment();
     }
 
@@ -29,24 +28,45 @@ public class MainActivity extends AppCompatActivity {
 
         // check Fairmatic settings on app resume if there are errors/warnings present
         FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
-        loadFirstFragment();
-        FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
     }
 
     private void loadFirstFragment() {
         Fragment firstFragment;
         if (SharedPrefsManager.sharedInstance(this).getDriverId() != null) {
             if (TripManager.sharedInstance(this).getTripManagerState().isUserOnDuty()) {
-                firstFragment = new OnDutyFragment();
+                firstFragment = getOnDutyFragment();
             }
             else {
-                firstFragment = new OffDutyFragment();
+                firstFragment = getOffDutyFragment();
             }
         }
         else {
-            firstFragment = new LoginFragment();
+            firstFragment = getLoginFragment();
         }
         replaceFragment(firstFragment);
+    }
+
+    private void goOffDuty() {
+        replaceFragment(getOffDutyFragment());
+    }
+
+    // The driver is currently off duty
+    private OffDutyFragment getOffDutyFragment() {
+        return new OffDutyFragment(() -> goOnDuty());
+    }
+
+    private void goOnDuty() {
+        replaceFragment(new OnDutyFragment(() -> goOffDuty()));
+    }
+
+    // The driver is currently on duty
+    private OnDutyFragment getOnDutyFragment() {
+        return new OnDutyFragment(() -> goOffDuty());
+    }
+
+    // The driver is yet to log in
+    private LoginFragment getLoginFragment() {
+        return new LoginFragment(() -> goOffDuty());
     }
 
     public void replaceFragment(Fragment newFragment) {

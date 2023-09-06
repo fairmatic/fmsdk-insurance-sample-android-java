@@ -14,6 +14,7 @@ import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
+import com.fairmatic.sdk.Fairmatic;
 import com.fairmatic.sdk.classes.FairmaticOperationCallback;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
@@ -22,6 +23,13 @@ import java.util.Objects;
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private EditText idEditText;
+
+    private Runnable onSuccessCallback;
+
+    // Default constructor required by Android's Fragment framework
+    public LoginFragment(Runnable onSuccessCallback) {
+        this.onSuccessCallback = onSuccessCallback;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,24 +49,33 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void signupButtonClicked() {
         final String driverId = idEditText.getText().toString();
-        if (!driverId.equals("")) {
-            // Save driver information
-            SharedPrefsManager.sharedInstance(getContext()).setDriverId(driverId);
+        if (getContext() == null) {
+            Toast.makeText(getContext(), "LoginFragment not attached to a host", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
+        if (!driverId.equals("") && Fairmatic.INSTANCE.isValidInputParameter(driverId)) {
             // Initialize FairmaticSdk
             FairmaticManager.sharedInstance().initializeFairmaticSDK(getContext(), driverId, new FairmaticOperationCallback() {
                 @Override
                 public void onCompletion(FairmaticOperationResult result) {
                     if (result instanceof FairmaticOperationResult.Failure) {
                         String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
-                        Toast.makeText(getContext(), "Failed to initialize Fairmatic SDK : " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Sign up Faield: " + errorMessage, Toast.LENGTH_SHORT).show();
                     } else {
-                        ((MainActivity) requireActivity()).replaceFragment(new OffDutyFragment());
+                        onSuccessCallback.run();
+                        // Save driver information
+                        SharedPrefsManager.sharedInstance(getContext()).setDriverId(driverId);
                         Toast.makeText(getContext(), "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             // Load UI
 
+        }
+        else{
+            Toast.makeText(getContext(), "Please enter a valid driver id", Toast.LENGTH_SHORT).show();
         }
     }
 }
