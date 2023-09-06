@@ -2,7 +2,6 @@ package com.fairmatic.fairmaticsamplejava;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.fairmatic.fairmaticsamplejava.fragments.LoginFragment;
@@ -10,7 +9,6 @@ import com.fairmatic.fairmaticsamplejava.fragments.OffDutyFragment;
 import com.fairmatic.fairmaticsamplejava.fragments.OnDutyFragment;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
-import com.fairmatic.fairmaticsamplejava.manager.TripManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadFirstFragment() {
         Fragment firstFragment;
         if (SharedPrefsManager.sharedInstance(this).getDriverId() != null) {
-            if (TripManager.sharedInstance(this).getTripManagerState().isUserOnDuty()) {
+            if (SharedPrefsManager.sharedInstance(this).isUserOnDuty()) {
                 firstFragment = getOnDutyFragment();
             }
             else {

@@ -12,12 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.fairmatic.fairmaticsamplejava.Constants;
-import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
 import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
-import com.fairmatic.fairmaticsamplejava.manager.TripManager;
-import com.fairmatic.sdk.classes.FairmaticOperationCallback;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
 import java.util.Objects;
@@ -60,7 +57,7 @@ public class OffDutyFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
+        FairmaticManager.sharedInstance().startInsurancePeriod1(context, fairmaticOperationResult -> {
             if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
                 Log.d(Constants.LOG_TAG_DEBUG, "Failed to handle insurance period 1 : " + ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError());
             } else {

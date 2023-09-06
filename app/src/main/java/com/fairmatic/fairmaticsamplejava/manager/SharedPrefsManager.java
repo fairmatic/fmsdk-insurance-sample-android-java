@@ -57,7 +57,7 @@ public class SharedPrefsManager {
         return prefs.getBoolean(PASSENGER_WAITING_FOR_PICKUP, false);
     }
 
-    void setPassengerWaitingForPickup(boolean passengerWaitingForPickup) {
+    public void setPassengerWaitingForPickup(boolean passengerWaitingForPickup) {
         prefs.edit().putBoolean(PASSENGER_WAITING_FOR_PICKUP, passengerWaitingForPickup).apply();
     }
 

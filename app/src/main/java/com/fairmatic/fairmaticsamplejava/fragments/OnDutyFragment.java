@@ -1,5 +1,6 @@
 package com.fairmatic.fairmaticsamplejava.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.fairmatic.fairmaticsamplejava.Constants;
-import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
 import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
-import com.fairmatic.fairmaticsamplejava.manager.TripManager;
-import com.fairmatic.sdk.classes.FairmaticOperationCallback;
+import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
 
 public class OnDutyFragment extends Fragment {
@@ -70,148 +69,96 @@ public class OnDutyFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(getContext());
-
-        acceptNewRideReqButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped");
-
-                TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
-                if (tripManager != null) {
-                    refreshUIForPeriod2();
-                    tripManager.acceptNewPassengerRequest(getContext(), new FairmaticOperationCallback() {
-                        @Override
-                        public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Success) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2");
-                            }
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
-                                        ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                            }
-                        }
-                    });
+        Context context = getContext();
+        acceptNewRideReqButton.setOnClickListener(view -> {
+            Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped");
+            FairmaticManager.sharedInstance().startInsurancePeriod2(context, fairmaticOperationResult -> {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Failed to accept a new ride request, error: " +
+                            ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2");
                 }
-            }
+            });
+            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(true);
+            refreshUIForPeriod2();
         });
 
-        pickupAPassengerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.LOG_TAG_DEBUG, "pickupAPassengerButton tapped");
-                TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
-                if (tripManager != null) {
-                    refreshUIForPeriod3();
-                    tripManager.pickupAPassenger(getContext(), new FairmaticOperationCallback() {
-                        @Override
-                        public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Success) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 3");
-                            }
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
-                                        ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                            }
-                        }
-                    });
+        pickupAPassengerButton.setOnClickListener(view -> {
+            Log.d(Constants.LOG_TAG_DEBUG, "pickupAPassengerButton tapped");
+            FairmaticManager.sharedInstance().startInsurancePeriod3(context, fairmaticOperationResult -> {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                   Log.d(Constants.LOG_TAG_DEBUG, "Failed to pickup a passenger, error: " +
+                           ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 3");
                 }
-            }
+            });
+
+            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(false);
+            SharedPrefsManager.sharedInstance(context).setPassengerInCar(true);
+            refreshUIForPeriod3();
         });
 
-        cancelRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.LOG_TAG_DEBUG, "cancelRequestButton tapped");
-                TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
-                if (tripManager != null) {
-                    refreshUIForPeriod1();
-                    tripManager.cancelARequest(getContext(), new FairmaticOperationCallback() {
-                        @Override
-                        public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Success) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1");
-                            }
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
-                                        ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                            }
-                        }
-                    });
+        cancelRequestButton.setOnClickListener(view -> {
+            Log.d(Constants.LOG_TAG_DEBUG, "cancelRequestButton tapped");
+            FairmaticManager.sharedInstance().startInsurancePeriod1(context, fairmaticOperationResult -> {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                   Log.d(Constants.LOG_TAG_DEBUG, "Failed to cancel a request, error: " +
+                           ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1");
+
                 }
-            }
+            } );
+            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(false);
+            refreshUIForPeriod1();
         });
 
-        dropAPassengerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.LOG_TAG_DEBUG, "dropAPassengerButton tapped");
-                TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
-                if (tripManager != null) {
-                    refreshUIForPeriod1();
-                    tripManager.dropAPassenger(getContext(), new FairmaticOperationCallback() {
-                        @Override
-                        public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Success) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1");
-                            }
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
-                                        ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                            }
-                        }
-                    });
+        dropAPassengerButton.setOnClickListener(view -> {
+            Log.d(Constants.LOG_TAG_DEBUG, "dropAPassengerButton tapped");
+            FairmaticManager.sharedInstance().startInsurancePeriod1(context, fairmaticOperationResult -> {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Failed to cancel a request, error: " +
+                            ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance Perod switched to 1");
                 }
-            }
+            });
+            SharedPrefsManager.sharedInstance(context).setPassengerInCar(false);
+            refreshUIForPeriod1();
         });
 
-        offDutyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.LOG_TAG_DEBUG, "offDutyButton tapped");
-                Toast.makeText(getContext(), "Going off duty", Toast.LENGTH_SHORT).show();
-                TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
-                if (tripManager != null) {
-                   if (nextFragment != null) {
-                       nextFragment.goOffDuty();
-                   }
-                    tripManager.goOffDuty(getContext(), new FairmaticOperationCallback() {
-                        @Override
-                        public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Success) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Insurance period stopped");
-                            }
-                            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                                Log.d(Constants.LOG_TAG_DEBUG, "Going Off duty failed, error: " +
-                                        ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
-                            }
-                        }
-                    });
+        offDutyButton.setOnClickListener(view -> {
+            Log.d(Constants.LOG_TAG_DEBUG, "offDutyButton tapped");
+            Toast.makeText(getContext(), "Going off duty", Toast.LENGTH_SHORT).show();
+            FairmaticManager.sharedInstance().stopPeriod(context, fairmaticOperationResult -> {
+                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Going Off duty failed, error: " +
+                            ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError().name());
+                } else {
+                    Log.d(Constants.LOG_TAG_DEBUG,"Insurance Period Stopped, goind off duty");
                 }
-            }
+            });
+            SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(false);
+            nextFragment.goOffDuty();
         });
 
     }
 
     private void refreshUI() {
-        TripManager tripManager = null;
-        if (getContext() != null) {
-            tripManager = TripManager.sharedInstance(getContext());
+        SharedPrefsManager sharedPrefsManager = null;
+        Context context = getContext();
+        if (context != null) {
+            sharedPrefsManager = SharedPrefsManager.sharedInstance(context);
         }
-
-        FairmaticManager fairmaticManager = FairmaticManager.sharedInstance();
-
-        if (tripManager != null && fairmaticManager != null) {
-            TripManager.State state = tripManager.getTripManagerState();
-            if (state != null && state.isUserOnDuty()) {
-                if (state.getPassengerWaitingForPickup()) {
-                    refreshUIForPeriod2();
-                } else if (state.getPassengerInCar()) {
-                    refreshUIForPeriod3();
-                } else {
-                    refreshUIForPeriod1();
-                }
+        if (sharedPrefsManager != null) {
+            if (sharedPrefsManager.passengerWaitingForPickup()) {
+                refreshUIForPeriod2();
+            } else if (sharedPrefsManager.passengerInCar()) {
+                refreshUIForPeriod3();
+            } else {
+                refreshUIForPeriod1();
             }
         }
     }
