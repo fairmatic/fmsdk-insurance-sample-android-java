@@ -33,6 +33,16 @@ public class OnDutyFragment extends Fragment {
 
     private Button acceptNewRideReqButton;
 
+    public interface NextFragment{
+        void goOffDuty();
+    }
+
+    private NextFragment nextFragment;
+
+    public void setOnLoginSuccessListener( NextFragment listener) {
+        this.nextFragment= listener;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,6 +62,7 @@ public class OnDutyFragment extends Fragment {
         dropAPassengerButton = layout.findViewById(R.id.dropAPassengerButton);
 
         offDutyButton = layout.findViewById(R.id.offDutyButton);
+        refreshUI();
 
         return layout;
     }
@@ -60,13 +71,13 @@ public class OnDutyFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        refreshUI();
         FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(getContext());
 
         acceptNewRideReqButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped");
+
                 TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
                 if (tripManager != null) {
                     refreshUIForPeriod2();
@@ -162,7 +173,9 @@ public class OnDutyFragment extends Fragment {
                 Toast.makeText(getContext(), "Going off duty", Toast.LENGTH_SHORT).show();
                 TripManager tripManager = getContext() != null ? TripManager.sharedInstance(getContext()) : null;
                 if (tripManager != null) {
-                    ((MainActivity) getActivity()).replaceFragment(new OffDutyFragment());
+                   if (nextFragment != null) {
+                       nextFragment.goOffDuty();
+                   }
                     tripManager.goOffDuty(getContext(), new FairmaticOperationCallback() {
                         @Override
                         public void onCompletion(FairmaticOperationResult fairmaticOperationResult) {

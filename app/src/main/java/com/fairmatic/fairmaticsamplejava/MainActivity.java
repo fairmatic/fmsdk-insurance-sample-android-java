@@ -52,21 +52,29 @@ public class MainActivity extends AppCompatActivity {
 
     // The driver is currently off duty
     private OffDutyFragment getOffDutyFragment() {
-        return new OffDutyFragment(() -> goOnDuty());
+        OffDutyFragment offDutyFragment = new OffDutyFragment();
+        offDutyFragment.setOnLoginSuccessListener(this::goOnDuty);
+        return offDutyFragment;
+        //return new OffDutyFragment(() -> goOnDuty());
     }
 
     private void goOnDuty() {
-        replaceFragment(new OnDutyFragment(() -> goOffDuty()));
+        replaceFragment(getOnDutyFragment());
     }
 
     // The driver is currently on duty
     private OnDutyFragment getOnDutyFragment() {
-        return new OnDutyFragment(() -> goOffDuty());
+        OnDutyFragment onDutyFragment = new OnDutyFragment();
+        onDutyFragment.setOnLoginSuccessListener(this::goOffDuty);
+        return onDutyFragment;
+        //return new OnDutyFragment(() -> goOffDuty());
     }
 
     // The driver is yet to log in
     private LoginFragment getLoginFragment() {
-        return new LoginFragment(() -> goOffDuty());
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.setOnLoginSuccessListener(this::goOffDuty);
+        return loginFragment;
     }
 
     public void replaceFragment(Fragment newFragment) {

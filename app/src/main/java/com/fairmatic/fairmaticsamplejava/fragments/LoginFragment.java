@@ -22,14 +22,18 @@ import java.util.Objects;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
+    public interface NextFragment{
+        void goOffDuty();
+    }
+
+    private NextFragment nextFragment;
+
+    public void setOnLoginSuccessListener(NextFragment listener) {
+        this.nextFragment= listener;
+    }
+
     private EditText idEditText;
 
-    private Runnable onSuccessCallback;
-
-    // Default constructor required by Android's Fragment framework
-    public LoginFragment(Runnable onSuccessCallback) {
-        this.onSuccessCallback = onSuccessCallback;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +68,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
                         Toast.makeText(getContext(), "Sign up Faield: " + errorMessage, Toast.LENGTH_SHORT).show();
                     } else {
-                        onSuccessCallback.run();
+                        if (nextFragment != null) {
+                            nextFragment.goOffDuty();
+                        }
                         // Save driver information
                         SharedPrefsManager.sharedInstance(getContext()).setDriverId(driverId);
                         Toast.makeText(getContext(), "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show();

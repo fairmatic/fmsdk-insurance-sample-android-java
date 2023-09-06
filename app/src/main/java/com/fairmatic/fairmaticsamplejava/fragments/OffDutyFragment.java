@@ -1,10 +1,12 @@
 package com.fairmatic.fairmaticsamplejava.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import com.fairmatic.fairmaticsamplejava.Constants;
 import com.fairmatic.fairmaticsamplejava.MainActivity;
 import com.fairmatic.fairmaticsamplejava.R;
+import com.fairmatic.fairmaticsamplejava.manager.FairmaticManager;
+import com.fairmatic.fairmaticsamplejava.manager.SharedPrefsManager;
 import com.fairmatic.fairmaticsamplejava.manager.TripManager;
 import com.fairmatic.sdk.classes.FairmaticOperationCallback;
 import com.fairmatic.sdk.classes.FairmaticOperationResult;
@@ -19,6 +23,16 @@ import com.fairmatic.sdk.classes.FairmaticOperationResult;
 import java.util.Objects;
 
 public class OffDutyFragment extends Fragment implements View.OnClickListener {
+
+    public interface NextFragment{
+        void goOnDuty();
+    }
+
+    private NextFragment nextFragment;
+
+    public void setOnLoginSuccessListener(NextFragment listener) {
+        this.nextFragment= listener;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -37,17 +51,26 @@ public class OffDutyFragment extends Fragment implements View.OnClickListener {
 
     private void goOnDutyButtonClicked() {
         Log.d(Constants.LOG_TAG_DEBUG, "goOnDutyButtonClicked");
-        TripManager.sharedInstance(getContext()).goOnDuty(getContext(), new FairmaticOperationCallback() {
-            @Override
-            public void onCompletion(@NonNull FairmaticOperationResult fairmaticOperationResult) {
-                if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
-                    String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) fairmaticOperationResult).getError());
-                    Log.d(Constants.LOG_TAG_DEBUG, "Failed to go on duty : " + errorMessage);
-                } else {
-                    Log.d(Constants.LOG_TAG_DEBUG, "Successfully went on duty");
-                    ((MainActivity) requireActivity()).replaceFragment(new OnDutyFragment());
-                }
+        Context context = getContext();
+        Toast.makeText(context, "Going on duty", Toast.LENGTH_SHORT).show();
+
+        if (context == null) {
+            Toast.makeText(context, "OffDutyFragment not attached to a host", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, fairmaticOperationResult -> {
+            if (fairmaticOperationResult instanceof FairmaticOperationResult.Failure) {
+                Log.d(Constants.LOG_TAG_DEBUG, "Failed to handle insurance period 1 : " + ((FairmaticOperationResult.Failure) fairmaticOperationResult).getError());
+            } else {
+                Log.d(Constants.LOG_TAG_DEBUG, "Start period 1 successfully");
             }
         });
+
+        SharedPrefsManager.sharedInstance(requireContext()).setIsUserOnDuty(true);
+        if (nextFragment != null) {
+            nextFragment.goOnDuty();
+        }
     }
 }

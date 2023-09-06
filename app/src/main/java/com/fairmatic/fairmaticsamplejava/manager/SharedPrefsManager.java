@@ -37,23 +37,23 @@ public class SharedPrefsManager {
         prefs.edit().putString(DRIVER_ID, driverId).apply();
     }
 
-    Boolean isUserOnDuty() {
+    public Boolean isUserOnDuty() {
         return prefs.getBoolean(USER_ON_DUTY, false);
     }
 
-    void setIsUserOnDuty(boolean isUserOnDuty) {
+    public void setIsUserOnDuty(boolean isUserOnDuty) {
         prefs.edit().putBoolean(USER_ON_DUTY, isUserOnDuty).apply();
     }
 
-    Boolean passengerInCar() {
+    public Boolean passengerInCar() {
         return prefs.getBoolean(PASSENGER_IN_CAR, false);
     }
 
-    void setPassengerInCar(boolean passengerInCar) {
+    public void setPassengerInCar(boolean passengerInCar) {
         prefs.edit().putBoolean(PASSENGER_IN_CAR, passengerInCar).apply();
     }
 
-    Boolean passengerWaitingForPickup() {
+    public Boolean passengerWaitingForPickup() {
         return prefs.getBoolean(PASSENGER_WAITING_FOR_PICKUP, false);
     }
 
@@ -61,7 +61,7 @@ public class SharedPrefsManager {
         prefs.edit().putBoolean(PASSENGER_WAITING_FOR_PICKUP, passengerWaitingForPickup).apply();
     }
 
-    String getTrackingId() {
+    public String getTrackingId() {
         return prefs.getString(TRACKING_ID, null);
     }
 
