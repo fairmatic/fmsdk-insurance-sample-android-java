@@ -66,7 +66,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 public void onCompletion(FairmaticOperationResult result) {
                     if (result instanceof FairmaticOperationResult.Failure) {
                         String errorMessage = String.valueOf(((FairmaticOperationResult.Failure) result).getError());
-                        Toast.makeText(getContext(), "Sign up Faield: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Sign up Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
                     } else {
                         if (nextFragment != null) {
                             nextFragment.goOffDuty();
@@ -77,8 +77,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     }
                 }
             });
-            // Load UI
-
         }
         else{
             Toast.makeText(getContext(), "Please enter a valid driver id", Toast.LENGTH_SHORT).show();
