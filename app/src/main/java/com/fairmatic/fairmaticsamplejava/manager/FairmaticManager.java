@@ -25,16 +25,8 @@ import com.fairmatic.sdk.classes.FairmaticSettingsCallback;
 import com.fairmatic.sdk.classes.GooglePlaySettingsError;
 
 public class FairmaticManager {
-    private class InsuranceInfo {
-        int insurancePeriod;
-        String trackingId;
 
-        InsuranceInfo(int insurancePeriod, String trackingId) {
-            this.insurancePeriod = insurancePeriod;
-            this.trackingId = trackingId;
-        }
-    }
-
+    // TODO - Add your Fairmatic SDK Key here
     private static final String FAIRMATIC_SDK_KEY = "";   // Your Fairmatic SDK Key
 
     private static FairmaticManager sharedInstance = new FairmaticManager();
