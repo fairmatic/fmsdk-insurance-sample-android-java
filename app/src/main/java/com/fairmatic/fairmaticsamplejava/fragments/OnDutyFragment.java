@@ -147,20 +147,15 @@ public class OnDutyFragment extends Fragment {
     }
 
     private void refreshUI() {
-        SharedPrefsManager sharedPrefsManager = null;
-        Context context = getContext();
-        if (context != null) {
-            sharedPrefsManager = SharedPrefsManager.sharedInstance(context);
+        SharedPrefsManager sharedPrefsManager = SharedPrefsManager.sharedInstance(requireContext());
+        if (sharedPrefsManager.passengerWaitingForPickup()) {
+            refreshUIForPeriod2();
+        } else if (sharedPrefsManager.passengerInCar()) {
+            refreshUIForPeriod3();
+        } else {
+            refreshUIForPeriod1();
         }
-        if (sharedPrefsManager != null) {
-            if (sharedPrefsManager.passengerWaitingForPickup()) {
-                refreshUIForPeriod2();
-            } else if (sharedPrefsManager.passengerInCar()) {
-                refreshUIForPeriod3();
-            } else {
-                refreshUIForPeriod1();
-            }
-        }
+
     }
 
     private void refreshUIForPeriod1() {

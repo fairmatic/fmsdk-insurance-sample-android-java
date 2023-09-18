@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         OffDutyFragment offDutyFragment = new OffDutyFragment();
         offDutyFragment.setOnLoginSuccessListener(this::goOnDuty);
         return offDutyFragment;
-        //return new OffDutyFragment(() -> goOnDuty());
     }
 
     private void goOnDuty() {
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         OnDutyFragment onDutyFragment = new OnDutyFragment();
         onDutyFragment.setOnLoginSuccessListener(this::goOffDuty);
         return onDutyFragment;
-        //return new OnDutyFragment(() -> goOffDuty());
     }
 
     // The driver is yet to log in
