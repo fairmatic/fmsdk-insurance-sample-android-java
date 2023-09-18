@@ -35,8 +35,7 @@ public class FairmaticManager {
         }
     }
 
-    // TODO - remove this before submit.
-    private static final String FAIRMATIC_SDK_KEY = "UXBDuLRFg6k2YT3oys2T9njD8BEzAoA1";   // Your Fairmatic SDK Key
+    private static final String FAIRMATIC_SDK_KEY = "";   // Your Fairmatic SDK Key
 
     private static FairmaticManager sharedInstance = new FairmaticManager();
 
