@@ -32,6 +32,7 @@ public class OnDutyFragment extends Fragment {
 
     private Button acceptNewRideReqButton;
 
+    private SharedPrefsManager sharedPrefsManager;
     public interface NextFragment{
         void goOffDuty();
     }
@@ -70,6 +71,8 @@ public class OnDutyFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Context context = getContext();
+        sharedPrefsManager = SharedPrefsManager.sharedInstance(context);
+
         acceptNewRideReqButton.setOnClickListener(view -> {
             Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped");
             FairmaticManager.sharedInstance().startInsurancePeriod2(context, fairmaticOperationResult -> {
@@ -80,7 +83,7 @@ public class OnDutyFragment extends Fragment {
                     Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2");
                 }
             });
-            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(true);
+            sharedPrefsManager.setPassengerWaitingForPickup(true);
             refreshUIForPeriod2();
         });
 
@@ -95,8 +98,8 @@ public class OnDutyFragment extends Fragment {
                 }
             });
 
-            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(false);
-            SharedPrefsManager.sharedInstance(context).setPassengerInCar(true);
+            sharedPrefsManager.setPassengerWaitingForPickup(false);
+            sharedPrefsManager.setPassengerInCar(true);
             refreshUIForPeriod3();
         });
 
@@ -111,7 +114,7 @@ public class OnDutyFragment extends Fragment {
 
                 }
             } );
-            SharedPrefsManager.sharedInstance(context).setPassengerWaitingForPickup(false);
+            sharedPrefsManager.setPassengerWaitingForPickup(false);
             refreshUIForPeriod1();
         });
 
@@ -125,7 +128,7 @@ public class OnDutyFragment extends Fragment {
                     Log.d(Constants.LOG_TAG_DEBUG, "Insurance Perod switched to 1");
                 }
             });
-            SharedPrefsManager.sharedInstance(context).setPassengerInCar(false);
+            sharedPrefsManager.setPassengerInCar(false);
             refreshUIForPeriod1();
         });
 
@@ -140,7 +143,7 @@ public class OnDutyFragment extends Fragment {
                     Log.d(Constants.LOG_TAG_DEBUG,"Insurance Period Stopped, goind off duty");
                 }
             });
-            SharedPrefsManager.sharedInstance(context).setIsUserOnDuty(false);
+            sharedPrefsManager.setIsUserOnDuty(false);
             nextFragment.goOffDuty();
         });
 
