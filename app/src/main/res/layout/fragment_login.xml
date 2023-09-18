@@ -7,10 +7,27 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/permissions_message"
+        android:textAlignment="viewStart"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.645"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signupButton"
+        app:layout_constraintVertical_bias="0.509" />
+
+
+    <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please enter your email below"
+        android:text="Please enter your Driver ID below"
         android:textColor="#070707"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/idEditText"
@@ -27,7 +44,7 @@
         android:layout_marginStart="55dp"
         android:layout_marginTop="93dp"
         android:ems="10"
-        android:hint="@string/email_placeholder"
+        android:hint="@string/driver_id_placeholder"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -10,4 +10,7 @@
     <string name="cancel_a_request">Cancel A Request</string>
     <string name="drop_a_passenger">Drop A Passenger</string>
     <string name="off_duty">Off Duty \u00A0 &#127969;</string>
+    <string name="permissions_message">Please provide the following permissions from Settings:
+        \u000A \u000A 1. Location \u000A 2. Draw over other apps \u000A 3. Notification</string>
+    <string name="driver_id_placeholder">Enter your driver id here</string>
 </resources>
