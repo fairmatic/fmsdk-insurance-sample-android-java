@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // check Fairmatic settings on app resume if there are errors/warnings present
-        FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this);
+        FairmaticManager.sharedInstance().checkFairmaticSettings(this);
     }
 
     private void loadFirstFragment() {

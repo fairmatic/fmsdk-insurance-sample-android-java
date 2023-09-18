@@ -51,9 +51,9 @@ public class MyFairmaticBroadcastReceiver extends FairmaticBroadcastReceiver {
         // Use these persisted flags as a basis to determine whether Fairmatic settings
         // should be fetched on app resume.
         SharedPrefsManager prefsManager = SharedPrefsManager.sharedInstance(context);
-        prefsManager.setSettingsErrorsFound(errorsFound);
-        prefsManager.setSettingsWarningsFound(warningsFound);
-        FairmaticManager.sharedInstance().checkFairmaticSettings(context);
+        if (errorsFound || warningsFound) {
+            FairmaticManager.sharedInstance().checkFairmaticSettings(context);
+        }
 
     }
 }

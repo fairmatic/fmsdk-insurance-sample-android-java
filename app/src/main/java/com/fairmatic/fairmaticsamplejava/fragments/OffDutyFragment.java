@@ -47,7 +47,7 @@ public class OffDutyFragment extends Fragment implements View.OnClickListener {
     }
 
     private void goOnDutyButtonClicked() {
-        Log.d(Constants.LOG_TAG_DEBUG, "goOnDutyButtonClicked");
+        Log.d(Constants.LOG_TAG_DEBUG, "Go On Duty Button Clicked");
         Context context = getContext();
         Toast.makeText(context, "Going on duty", Toast.LENGTH_SHORT).show();
 

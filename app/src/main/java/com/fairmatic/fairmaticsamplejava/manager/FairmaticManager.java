@@ -86,13 +86,6 @@ public class FairmaticManager {
         );
     }
 
-    public void maybeCheckFairmaticSettings(Context context) {
-        SharedPrefsManager prefsManager = SharedPrefsManager.sharedInstance(context);
-        if (prefsManager.isSettingsErrorFound() || prefsManager.isSettingsWarningsFound()) {
-            checkFairmaticSettings(context);
-        }
-    }
-
     public void checkFairmaticSettings(final Context context) {
         // clear all previous setting error notifications.
         NotificationUtility.clearAllErrorNotifications(context);
